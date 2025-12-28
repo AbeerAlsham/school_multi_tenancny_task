@@ -10,8 +10,13 @@ class School extends Model
         'name'
     ];
 
-    public function users()
+    // public function users()
+    // {
+    //     return $this->hasMany(User::class);
+    // }
+
+    public function teachers()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class, 'schools_teachers', 'school_id', 'teacher_id');
     }
 }
