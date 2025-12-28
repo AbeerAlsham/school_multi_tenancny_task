@@ -10,6 +10,9 @@ class School extends Model
         'name'
     ];
 
+    public function students(){
+        return $this->hasMany(User::class)->where('type', 'student');
+    }
     // public function users()
     // {
     //     return $this->hasMany(User::class);

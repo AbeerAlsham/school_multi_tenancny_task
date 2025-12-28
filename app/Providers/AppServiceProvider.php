@@ -28,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-teacher', function (User $user) {
             return $user->isSuperAdmin();
         });
+        Gate::define('manage-student', function (User $user) {
+            return $user->type === "admin";
+        });
     }
 }

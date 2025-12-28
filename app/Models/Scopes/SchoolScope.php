@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema; // إضافة هذا السطر ضرورية جداً
+use Illuminate\Support\Facades\Schema; 
 
 class SchoolScope implements Scope
 {
