@@ -22,7 +22,7 @@ class SchoolScope implements Scope
         $schoolId = Auth::user()->school_id;
 
         /** @var \Illuminate\Database\Eloquent\Model $model */
-        if (Schema::hasColumn($model->getTable(), 'school_id')) {
+        if (Schema::hasColumn($model->getTable(), 'school_id') && ! $schoolId) {//added school_id to condition for role teacher
             $builder->where($model->getTable() . '.school_id', $schoolId);
         } elseif (method_exists($model, 'schools')) {
             $builder->whereHas('schools', function ($query) use ($schoolId) {
