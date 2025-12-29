@@ -22,4 +22,9 @@ class School extends Model
     {
         return $this->belongsToMany(User::class, 'schools_teachers', 'school_id', 'teacher_id');
     }
+
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class, 'schools_subjects', 'school_id', 'subject_id');
+    }
 }
