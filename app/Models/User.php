@@ -70,4 +70,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Subject::class, 'subjects_teachers', 'teacher_id', 'subject_id')
                     ->withPivot('school_id');
     }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class, 'student_id');
+    }
 }
