@@ -1,59 +1,138 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+### 🎓 School Management Backend (Laravel 12)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Minimal multi-tenant school system built with Laravel 12 using a single database architecture.
+Supports schools, users, subjects, and a student cart system with proper authorization and validation.
 
-## About Laravel
+## 📦 Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+PHP 8.2+
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Composer
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+MySQL / MariaDB
 
-## Learning Laravel
+Laravel 12
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Laravel Sanctum
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚙️ Setup Instructions
+git clone [<repository-url>](https://github.com/AbeerAlsham/school_multi_tenancny_task)
+cd task_school
+composer install
 
-## Laravel Sponsors
+## Environment
+cp .env.example .env
+php artisan key:generate
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Update .env with your database credentials.
 
-### Premium Partners
+# Database
+php artisan migrate --seed
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
 
-## Contributing
+Seeder creates a super admin:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+email: admin@admin.com
+password: password
 
-## Code of Conduct
+# Run Server
+php artisan serve
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+All protected endpoints require authentication using **Laravel Sanctum**.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🔐 Authentication
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Method | Endpoint  | Description                       |
+| ------ | --------- | --------------------------------- |
+| POST   | `/login`  | Authenticate user and issue token |
+| POST   | `/logout` | Revoke current token              |
+
+---
+
+## 🎒 Cart (Student)
+
+| Method | Endpoint                   | Description                   |
+| ------ | -------------------------- | ----------------------------- |
+| GET    | `/cart`                    | Retrieve current student cart |
+| POST   | `/cart/items/add`          | Add items to cart             |
+| PUT    | `/cart/update/{cart_item}` | Update cart item quantity     |
+| DELETE | `/cart/remove/{item}`      | Remove item from cart         |
+
+---
+
+## 🏫 Schools
+
+| Method | Endpoint        | Description         |
+| ------ | --------------- | ------------------- |
+| GET    | `/schools`      | List all schools    |
+| POST   | `/schools`      | Create new school   |
+| GET    | `/schools/{id}` | Show school details |
+| PUT    | `/schools/{id}` | Update school       |
+| DELETE | `/schools/{id}` | Delete school       |
+
+---
+
+## 👨‍🎓 Students
+
+**Permission required:** `manage-student`
+
+| Method | Endpoint                     | Description              |
+| ------ | ---------------------------- | ------------------------ |
+| POST   | `/students`                  | Create student           |
+| GET    | `/schools/{school}/students` | List students per school |
+
+---
+
+## 📘 Subjects
+
+**Permission required:** `manage-subject`
+
+| Method | Endpoint                                        | Description               |
+| ------ | ----------------------------------------------- | ------------------------- |
+| GET    | `/subjects`                                     | List subjects             |
+| POST   | `/subjects`                                     | Create subject            |
+| GET    | `/subjects/{id}`                                | Show subject              |
+| POST   | `/schools/{school}/subjects/{id}/assign-school` | Assign subject to school  |
+| POST   | `/subjects/{id}/users/{teacher}/assign-teacher` | Assign teacher to subject |
+
+---
+
+## 👩‍🏫 Teachers
+
+**Permission required:** `manage-teacher`
+
+| Method | Endpoint                                      | Description                |
+| ------ | --------------------------------------------- | -------------------------- |
+| POST   | `/teachers`                                   | Create teacher             |
+| POST   | `/schools/{school}/teachers/{teacher}/assign` | Assign teacher to school   |
+| DELETE | `/schools/{school}/teachers/{teacher}/remove` | Remove teacher from school |
+
+---
+
+## 🔒 Authorization Summary
+
+| Permission       | Description     |
+| ---------------- | --------------- |
+| `manage-student` | Manage students |
+| `manage-subject` | Manage subjects |
+| `manage-teacher` | Manage teachers |
+
+---
+
+## ⭐ Optional Features Implemented
+
+- Service Layer
+
+- Global Scopes
+
+- Clean API structure
+
+## 🧠 Notes
+
+* Single database multi-tenancy using `school_id`
+* Authorization enforced via Gates and Policies
+* Student cart operations restricted to student users only
+* All endpoints return appropriate HTTP status codes
