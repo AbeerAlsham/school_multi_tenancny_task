@@ -1,0 +1,34 @@
+# نحدد الإصدار الذي نريده بالضبط
+FROM php:8.3-fpm
+
+# تثبيت الاعتمادات الأساسية للنظام
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
+
+# تثبيت إضافات PHP المطلوبة لـ Laravel
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# تثبيت Composer داخل الحاوية
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# نسخ ملفات المشروع
+WORKDIR /var/www
+COPY . .
+
+# تثبيت مكتبات المشروع وتجاهل فحوصات المنصة
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+
+# إعطاء الصلاحيات لمجلدات Laravel
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+# تحديد المنفذ (Port) الذي سيستخدمه Railway
+EXPOSE 8080
+
+# أمر التشغيل (استخدام السيرفر المدمج للتبسيط في API)
+CMD php artisan serve --host=0.0.0.0 --port=8080
